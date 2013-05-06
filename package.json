@@ -10,9 +10,11 @@
   "license": "BSD",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "grunt": "~0.4.1"
+    "grunt": "~0.4.1",
+    "expect.js": "~0.2"
   },
   "scripts": {
+  	"test": "testem",
     "start": "node app/execute-commands.js"
   }
 }

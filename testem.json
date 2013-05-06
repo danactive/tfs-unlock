@@ -1,0 +1,9 @@
+{
+	"framework": "mocha",
+	"launch_in_dev": ["chrome","PhantomJS"],
+	"src_files": [
+		"node_modules/expect.js/expect.js",
+		"lib/*.js",
+		"tests/*.js"
+	]
+}
