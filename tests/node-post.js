@@ -4,8 +4,11 @@ describe('POST commands', function(){
 			$.ajax({
 				"url": 'http://localhost:8080/',
 				"data": {
-					"hello": 'world'
+					"send": 'data'
 				},
+				"dataType": 'jsonp',
+				"jsonp": 'false',
+				"jsonpCallback": 'callit',
 				"type": 'post',
 				"success": function (data) {
 					debugger;

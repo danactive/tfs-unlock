@@ -29,7 +29,7 @@ http.createServer(function (request, response) {
 			var decodedBody = querystring.parse(fullBody);
 
 			// output the decoded data to the HTTP response          
-			response.write(JSON.stringify({"hello": 'world'}));
+			response.write("callit(" + JSON.stringify({"hello": 'world'}) + ")");
 			//response.write(utils.inspect(decodedBody));
 
 			response.end();
