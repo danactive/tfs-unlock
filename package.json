@@ -1,0 +1,18 @@
+{
+  "name": "tfs-unlock",
+  "version": "0.0.1",
+  "description": "Windows Team Foundation Server checkout files via Node.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:danactive/tfs-unlock.git"
+  },
+  "author": "Dan BROOKS",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "devDependencies": {
+    "grunt": "~0.4.1"
+  },
+  "scripts": {
+    "start": "node app/execute-commands.js"
+  }
+}
