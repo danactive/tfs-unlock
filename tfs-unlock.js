@@ -13,10 +13,9 @@ var shell = {
 	}
 };
 
-exports.tfs = {
-	"checkout": function (paths) {
-		paths.forEach(function (path) {
-			shell.exe("cd C:/Program Files (x86)/Microsoft Visual Studio 10.0/Common7/IDE/ & tf.exe checkout " + path);
-		});
-	}
+exports.checkout = function (verifiedPaths) { // verfied meaning the path and file exisit
+	verifiedPaths.forEach(function (filepath) {
+		var command = "cd C:/Program Files (x86)/Microsoft Visual Studio 10.0/Common7/IDE/ & tf.exe checkout " + filepath;
+		shell.exe(command);
+	});
 };
