@@ -1,21 +1,40 @@
 var shell = {
 	"exe": function (command) {
-		var process = require('child_process').exec;
+		var process = require('child_process').exec,
+			child;
 		if (command) {
-			process(command, { "cwd": 'C:/Program Files (x86)/Microsoft Visual Studio 10.0/Common7/IDE/' }, function (error, interpreterOutput, interpreterError) {
-				console.log('\n\nInterpreter Output:\n' + interpreterOutput);
-				console.log('\n\nInterpreter Error:\n' + interpreterError);
-				console.log('\n\nCommand:\n' + command);
+			child = process(command, { "cwd": 'C:/Program Files (x86)/Microsoft Visual Studio 10.0/Common7/IDE/' });
+
+			child.stdout.on('data', function (data) {
+				console.log('Interpreter Output: ' + data);
 			});
+			child.stderr.on('data', function (data) {
+				console.log('Interpreter Error: ' + data);
+			});
+			child.on('close', function (code) {
+				console.log('Child process exited with code ' + code);
+			});
+
+			return "Begin shell command";
 		} else {
-			console.log('Missing shell command\n');
+			return 'Missing shell command';
 		}
 	}
+},
+tfs = function (verifiedPaths, command, callback) { // verfied meaning the path and file exisit
+	var log = '';
+	verifiedPaths.forEach(function (filepath) {
+		var commandLine = "tf.exe " + command + " " + filepath;
+		log += shell.exe(commandLine);
+	});
+	callback();
+	return log;
 };
 
-exports.checkout = function (verifiedPaths) { // verfied meaning the path and file exisit
-	verifiedPaths.forEach(function (filepath) {
-		var command = "tf.exe checkout " + filepath;
-		shell.exe(command);
-	});
+exports.checkout = function (verifiedPaths, callback) {
+	return tfs(verifiedPaths, 'checkout', callback);
+};
+
+exports.undo = function (verifiedPaths, callback) {
+	return tfs(verifiedPaths, 'undo /noprompt', callback);
 };
