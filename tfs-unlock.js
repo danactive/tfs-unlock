@@ -1,8 +1,17 @@
+/*
+* tfs-unlock
+* https://github.com/danactive/tfs-unlock
+*
+* Copyright (c) 2013 Dan BROOKS
+* Licensed under the MIT license.
+*/
+
 var callback,
+fs = require('fs'),
 shell = {
 	"exe": function (command) {
-		var process = require('child_process').exec,
-			child;
+		var child,
+			process = require('child_process').exec;
 		if (command) {
 			child = process(command, { "cwd": workingDirectory });
 
@@ -15,7 +24,7 @@ shell = {
 			child.on('close', function (code, signal) {
 				console.log('Child process exited with code # ' + code + '.');
 				if (signal !== null) {
-					console.log('child process terminated due to receipt of signal ' + signal + '.');
+					console.log('Child process terminated due to receipt of signal ' + signal + '.');
 				}
 			});
 
@@ -25,15 +34,21 @@ shell = {
 		}
 	}
 },
-tfs = function (verifiedPaths, command) { // verfied meaning the path and file exisit
+tfs = function (paths, command) { // verfied meaning the path and file exisit
 	var log = '';
-	verifiedPaths.forEach(function (filepath) {
+	paths.forEach(function (filepath) {
 		var commandLine = "tf.exe " + command + " " + filepath;
-		log += shell.exe(commandLine);
+		fs.exists(filepath, function (exists) {
+			if (exists) {
+				log += shell.exe(commandLine);
+				if (callback) {
+					callback();
+				}
+			} else {
+				console.log('File path: ' + filepath + ' is not found.');
+			}
+		});
 	});
-	if (callback) {
-		callback();
-	}
 	return log;
 },
 workingDirectory;
@@ -44,11 +59,11 @@ exports.init = function (param) {
 };
 
 // TFS command-line http://msdn.microsoft.com/en-us/library/z51z7zy0(v=vs.100).aspx
-exports.checkout = function (verifiedPaths) {
-	return tfs(verifiedPaths, 'checkout');
+exports.checkout = function (paths) {
+	return tfs(paths, 'checkout');
 };
-exports.undo = function (verifiedPaths) {
-	return tfs(verifiedPaths, 'undo /noprompt');
+exports.undo = function (paths) {
+	return tfs(paths, 'undo /noprompt');
 };
 
 // Enumeration for visualStudioPath
