@@ -11,6 +11,12 @@
 var callback,
 fs = require('fs'),
 workingDirectory,
+messages = {
+	"shell": {
+		"beginCommand": 'Begin shell command',
+		"noCommand": 'Missing shell command'
+	}
+},
 shell = {
 	"exe": function (command) {
 		var child,
@@ -31,9 +37,9 @@ shell = {
 				}
 			});
 
-			return "Begin shell command";
+			return messages.shell.beginCommand;
 		} else {
-			return 'Missing shell command';
+			return messages.shell.noCommand;
 		}
 	}
 },
@@ -81,3 +87,7 @@ exports.vs2012 = {
 	"bit32": 'C:/Program Files/Microsoft Visual Studio 11.0/Common7/IDE/',
 	"bit64": 'C:/Program Files (x86)/Microsoft Visual Studio 11.0/Common7/IDE/'
 };
+
+// for test suite
+exports.shell = shell;
+exports.messages = messages;
