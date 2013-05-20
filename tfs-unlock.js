@@ -6,8 +6,11 @@
 * Licensed under the MIT license.
 */
 
+'use strict';
+
 var callback,
 fs = require('fs'),
+workingDirectory,
 shell = {
 	"exe": function (command) {
 		var child,
@@ -50,8 +53,7 @@ tfs = function (paths, command) { // verfied meaning the path and file exisit
 		});
 	});
 	return log;
-},
-workingDirectory;
+};
 
 exports.init = function (param) {
 	callback = param.callback;
