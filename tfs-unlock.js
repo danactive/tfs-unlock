@@ -16,6 +16,7 @@ messages = {
 		"beginCommand": 'Begin shell command',
 		"noCommand": 'Missing shell command',
 		"stderr": 'Interpreter Error: ',
+		"stdout": 'Interpreter Output: ',
 		"exitCode": 'Child process exited with code # '
 	}
 },
@@ -26,7 +27,7 @@ shell = {
 			process = require('child_process').exec(command, { "cwd": workingDirectory });
 
 			process.stdout.on('data', function (message) {
-				calleeCallback('stdout','Interpreter Output: ' + message + '.');
+				calleeCallback('stdout', messages.shell.stdout + message + '.');
 			});
 			process.stderr.on('data', function (message) {
 				calleeCallback('stderr', messages.shell.stderr + message + '.');
