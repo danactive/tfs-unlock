@@ -8,33 +8,36 @@
 
 'use strict';
 
-var callback,
+var shellCallback,
 fs = require('fs'),
 workingDirectory,
 messages = {
 	"shell": {
 		"beginCommand": 'Begin shell command',
-		"noCommand": 'Missing shell command'
+		"noCommand": 'Missing shell command',
+		"stderr": 'Interpreter Error: ',
+		"exitCode": 'Child process exited with code # '
 	}
 },
 shell = {
-	"exe": function (command) {
-		var child,
-			process = require('child_process').exec;
+	"exe": function (command, calleeCallback) {
+		var process;
 		if (command) {
-			child = process(command, { "cwd": workingDirectory });
+			process = require('child_process').exec(command, { "cwd": workingDirectory });
 
-			child.stdout.on('data', function (data) {
-				console.log('Interpreter Output: ' + data + '.');
+			process.stdout.on('data', function (message) {
+				calleeCallback('stdout','Interpreter Output: ' + message + '.');
 			});
-			child.stderr.on('data', function (data) {
-				console.log('Interpreter Error: ' + data + '.');
+			process.stderr.on('data', function (message) {
+				calleeCallback('stderr', messages.shell.stderr + message + '.');
 			});
-			child.on('close', function (code, signal) {
-				console.log('Child process exited with code # ' + code + '.');
-				if (signal !== null) {
-					console.log('Child process terminated due to receipt of signal ' + signal + '.');
+			process.on('close', function (code, signal) {
+				var out = '';
+				out += messages.shell.exitCode + code + '.';
+				if (signal != null) {
+					out += 'Child process terminated due to receipt of signal ' + signal + '.';
 				}
+				calleeCallback('close', out);
 			});
 
 			return messages.shell.beginCommand;
@@ -50,8 +53,8 @@ tfs = function (paths, command) { // verfied meaning the path and file exisit
 		fs.exists(filepath, function (exists) {
 			if (exists) {
 				log += shell.exe(commandLine);
-				if (callback) {
-					callback();
+				if (shellCallback) {
+					shellCallback();
 				}
 			} else {
 				console.log('File path: ' + filepath + ' is not found.');
@@ -62,7 +65,7 @@ tfs = function (paths, command) { // verfied meaning the path and file exisit
 };
 
 exports.init = function (param) {
-	callback = param.callback;
+	shellCallback = param.callback;
 	workingDirectory = param.visualStudioPath;
 };
 
