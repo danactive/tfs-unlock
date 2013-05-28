@@ -24,12 +24,15 @@ describe('Shell commands', function () {
 	it('should succeed', function (done) {
 		var shellCallback = function (type, response) {
 			var now = new Date(),
-				hours12 = (now.getHours() <= 12) ? now.getHours() : now.getHours() - 12;
+				minutes = (now.getMinutes() <= 9) ? '0' + now.getMinutes() : now.getMinutes(),
+				hours = now.getHours(),
+				time = (hours <= 12) ? hours + ':' + minutes + ' AM' : (hours = hours - 12) + ':' + minutes + ' PM';
+			time = (hours <= 9) ? '0' + time : time;
 			if (type === 'stdout') {
-				expect(response).to.contain(tfs.messages.shell.stdout + " " + hours12 + ':' + now.getMinutes() + "PM");
+				expect(response).to.be(tfs.messages.shell.stdout + time + "\r\n.");
 			}
 			if (type === 'close') {
-				expect(response).to.be(tfs.messages.shell.exitCode + '0.;');
+				expect(response).to.be(tfs.messages.shell.exitCode + '0.');
 				done();
 			}
 		};
