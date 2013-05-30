@@ -1,1 +1,0 @@
-cmd.exe /k "npm install -g grunt-cli testem@0.2.83"
