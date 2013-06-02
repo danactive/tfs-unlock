@@ -48,21 +48,23 @@ shell = {
 	}
 },
 tfs = function (paths, command) { // verfied meaning the path and file exisit
-	var log = '';
+	if( Object.prototype.toString.call( paths ) !== '[object Array]' ) {
+		throw new TypeError("paths parameter must be an array");
+		return;
+	}
 	paths.forEach(function (filepath) {
 		var commandLine = "tf.exe " + command + " " + filepath;
-		fs.exists(filepath, function (exists) {
+		fs.exists(filepath, function (exists) { // async
 			if (exists) {
-				log += shell.exe(commandLine);
 				if (shellCallback) {
 					shellCallback();
 				}
 			} else {
-				console.log('File path: ' + filepath + ' is not found.');
+				throw new ReferenceError('File path is not found: ' + filepath);
+				return;
 			}
 		});
 	});
-	return log;
 };
 
 exports.init = function (param) {
@@ -70,7 +72,7 @@ exports.init = function (param) {
 	workingDirectory = param.visualStudioPath;
 };
 
-// TFS command-line http://msdn.microsoft.com/en-us/library/z51z7zy0(v=vs.100).aspx
+// TFS `mmand-line http://msdn.microsoft.com/en-us/library/z51z7zy0(v=vs.100).aspx
 exports.checkout = function (paths) {
 	return tfs(paths, 'checkout');
 };
