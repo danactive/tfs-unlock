@@ -50,7 +50,6 @@ shell = {
 tfs = function (paths, command) { // verfied meaning the path and file exisit
 	if( Object.prototype.toString.call( paths ) !== '[object Array]' ) {
 		throw new TypeError("paths parameter must be an array");
-		return;
 	}
 	paths.forEach(function (filepath) {
 		var commandLine = "tf.exe " + command + " " + filepath;
@@ -61,7 +60,6 @@ tfs = function (paths, command) { // verfied meaning the path and file exisit
 				}
 			} else {
 				throw new ReferenceError('File path is not found: ' + filepath);
-				return;
 			}
 		});
 	});
