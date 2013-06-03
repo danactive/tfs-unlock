@@ -48,21 +48,27 @@ shell = {
 	}
 },
 tfs = function (paths, command) { // verfied meaning the path and file exisit
+	var commandLine,
+		exists,
+		log = '';
 	if( Object.prototype.toString.call( paths ) !== '[object Array]' ) {
 		throw new TypeError("paths parameter must be an array");
 	}
 	paths.forEach(function (filepath) {
-		var commandLine = "tf.exe " + command + " " + filepath;
-		fs.exists(filepath, function (exists) { // async
-			if (exists) {
-				if (shellCallback) {
-					shellCallback();
-				}
-			} else {
-				throw new ReferenceError('File path is not found: ' + filepath);
+		filepath = fs.realpathSync(filepath); // resolve full path
+		commandLine = "tf.exe " + command + " " + filepath;
+		exists = fs.existsSync(filepath);
+		if (exists) {
+			shell.exe(commandLine);
+			log += "\n" + filepath;
+			if (shellCallback) {
+				shellCallback();
 			}
-		});
+		} else {
+			throw new ReferenceError('File path is not found: ' + filepath);
+		}
 	});
+	return log;
 };
 
 exports.init = function (param) {
