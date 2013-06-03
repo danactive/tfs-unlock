@@ -10,7 +10,7 @@
 
 var fs = require('fs'),
 shellCallback,
-wait = 3, // 4sec default delay for TFS to apply commands
+wait = 3, // sec default delay for TFS to apply commands
 workingDirectory,
 messages = {
 	"shell": {
@@ -71,7 +71,9 @@ tfs = function (paths, command) { // verfied meaning the path and file exisit
 		}
 	});
 
-	sleeper.sleep(wait);
+	if (wait && wait > 0) {
+		sleeper.sleep(wait);
+	}
 
 	return log;
 };
