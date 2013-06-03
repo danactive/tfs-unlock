@@ -8,8 +8,9 @@
 
 'use strict';
 
-var shellCallback,
-fs = require('fs'),
+var fs = require('fs'),
+shellCallback,
+wait = 3, // 4sec default delay for TFS to apply commands
 workingDirectory,
 messages = {
 	"shell": {
@@ -48,7 +49,8 @@ shell = {
 	}
 },
 tfs = function (paths, command) { // verfied meaning the path and file exisit
-	var commandLine,
+	var sleeper = require('sleep'),
+		commandLine,
 		exists,
 		log = '';
 	if( Object.prototype.toString.call( paths ) !== '[object Array]' ) {
@@ -68,12 +70,16 @@ tfs = function (paths, command) { // verfied meaning the path and file exisit
 			throw new ReferenceError('File path is not found: ' + filepath);
 		}
 	});
+
+	sleeper.sleep(wait);
+
 	return log;
 };
 
 exports.init = function (param) {
 	shellCallback = param.callback;
 	workingDirectory = param.visualStudioPath;
+	wait = param.wait || wait;
 };
 
 // TFS `mmand-line http://msdn.microsoft.com/en-us/library/z51z7zy0(v=vs.100).aspx
