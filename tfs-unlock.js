@@ -28,18 +28,24 @@ shell = {
 			process = require('child_process').exec(command, { "cwd": workingDirectory });
 
 			process.stdout.on('data', function (message) {
-				calleeCallback('stdout', messages.shell.stdout + message + '.');
+				if (calleeCallback) {
+					calleeCallback('stdout', messages.shell.stdout + message + '.');
+				}
 			});
 			process.stderr.on('data', function (message) {
-				calleeCallback('stderr', messages.shell.stderr + message + '.');
+				if (calleeCallback) {
+					calleeCallback('stderr', messages.shell.stderr + message + '.');
+				}
 			});
 			process.on('close', function (code, signal) {
 				var out = '';
-				out += messages.shell.exitCode + code + '.';
+				out += messages.shell.exitCode + (code || '') + '.';
 				if (signal != null) {
 					out += 'Child process terminated due to receipt of signal ' + signal + '.';
 				}
-				calleeCallback('close', out);
+				if (calleeCallback) {
+					calleeCallback('close', out);
+				}
 			});
 
 			return messages.shell.beginCommand;
