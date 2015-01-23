@@ -9,6 +9,7 @@
   "author": "Dan BROOKS",
   "license": "BSD",
   "readmeFilename": "README.md",
+  "main": "tfs-unlock.js",
   "dependencies": {
     "sleep": "~1.1.0"
   },
