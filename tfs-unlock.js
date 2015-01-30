@@ -74,7 +74,7 @@ var fs = require('fs'),
 			throw new TypeError("paths parameter must be an array");
 		}
 
-		_handlePaths(paths).done(function (logs) {
+		_handlePaths(paths, command).done(function (logs) {
 			console.log(logs);
 			if (shellCallback) {
 				shellCallback();
@@ -83,31 +83,30 @@ var fs = require('fs'),
 			console.log('error', err);
 		});
 	},
-	_handlePaths = function (paths) {
-		return Q.all(paths.map(_handlePath));
-	},
-	_handlePath = function (filepath) {
-		var deferred = Q.defer();
-		var log = '';
-		var filepath = fs.realpathSync(filepath); // resolve full path
-		var commandLine = "tf.exe " + command + " " + filepath;
-		var exists = fs.existsSync(filepath);
+	_handlePaths = function (paths, command) {
+		return Q.all(paths.map(function (filepath) {
+			var deferred = Q.defer();
+			var log = '';
+			var filepath = fs.realpathSync(filepath); // resolve full path
+			var commandLine = "tf.exe " + command + " " + filepath;
+			var exists = fs.existsSync(filepath);
 
-		if (exists) {
-			shell.exe(commandLine).then(function (out) {
-				log += out;
-				deferred.resolve(log);
-			}, function (err) {
-				deferred.reject(err);
-			}, function (progress) {
-				log += progress;
-			});
+			if (exists) {
+				shell.exe(commandLine).then(function (out) {
+					log += out;
+					deferred.resolve(log);
+				}, function (err) {
+					deferred.reject(err);
+				}, function (progress) {
+					log += progress;
+				});
 
-		} else {
-			throw new ReferenceError('File path is not found: ' + filepath);
-		}
+			} else {
+				throw new ReferenceError('File path is not found: ' + filepath);
+			}
 
-		return deferred.promise;
+			return deferred.promise;
+		}));
 	},
 	findVisualStudioPath = function () {
 		var wd;
