@@ -9,6 +9,7 @@
 'use strict';
 
 var fs = require('fs'),
+	path = require('path'),
 	Q = require('Q'),
 	shellCallback,
 	wait = 3, // sec default delay for TFS to apply commands
@@ -51,8 +52,8 @@ var fs = require('fs'),
 					if (signal != null) {
 						out += 'Child process terminated due to receipt of signal ' + signal + '.';
 					}
-
-					deferred.resolve(out);
+					
+					deferred.resolve({exitCode: code, message: out});
 				});
 
 				deferred.notify({
@@ -68,20 +69,25 @@ var fs = require('fs'),
 	tfs = function (paths, command) { // verfied meaning the path and file exisit
 		var commandLine,
 			exists,
-			log = '';
+			log = '',
+			deferred = Q.defer();
 
 		if (Object.prototype.toString.call(paths) !== '[object Array]') {
 			throw new TypeError("paths parameter must be an array");
 		}
 
 		_handlePaths(paths, command).done(function (logs) {
-			console.log(logs);
 			if (shellCallback) {
-				shellCallback();
+				shellCallback(logs);
 			}
+			
+			deferred.resolve(logs);
 		}, function (err) {
-			console.log('error', err);
+			console.error('error', err);
+			deferred.reject(err);
 		});
+		
+		return deferred.promise;
 	},
 	_handlePaths = function (paths, command) {
 		return Q.all(paths.map(function (filepath) {
@@ -93,12 +99,17 @@ var fs = require('fs'),
 
 			if (exists) {
 				shell.exe(commandLine).then(function (out) {
-					log += out;
-					deferred.resolve(log);
+					log += out.message;
+					
+					if (out.exitCode && out.exitCode !== 0) {
+						deferred.reject(out);
+					} else {					
+						deferred.resolve(log);
+					}
 				}, function (err) {
 					deferred.reject(err);
 				}, function (progress) {
-					log += progress;
+					log += progress.message;
 				});
 
 			} else {
@@ -112,10 +123,10 @@ var fs = require('fs'),
 		var wd;
 		for (var ver in paths) {
 			if (paths.hasOwnProperty(ver)) {
-				for (var path in paths[ver]) {
-					if (paths[ver].hasOwnProperty(path)) {
-						if (fs.existsSync(paths[ver][path])) {
-							wd = paths[ver][path];
+				for (var dirPath in paths[ver]) {
+					if (paths[ver].hasOwnProperty(dirPath)) {
+						if (fs.existsSync(paths[ver][dirPath]) && fs.existsSync(path.join(paths[ver][dirPath], 'tf.exe'))) {
+							wd = paths[ver][dirPath];
 						}
 					}
 				}
@@ -138,7 +149,7 @@ exports.init = function (param) {
 
 };
 
-// TFS `mmand-line http://msdn.microsoft.com/en-us/library/z51z7zy0(v=vs.100).aspx
+// TFS `command-line http://msdn.microsoft.com/en-us/library/z51z7zy0(v=vs.100).aspx
 exports.checkout = function (paths) {
 	return tfs(paths, 'checkout');
 };
@@ -149,20 +160,20 @@ exports.undo = function (paths) {
 // Enumeration for visualStudioPath
 var paths = {
 	vs2008: {
-		"bit32": 'C:/Program Files/Microsoft Visual Studio 9.0/Common7/IDE/',
-		"bit64": 'C:/Program Files (x86)/Microsoft Visual Studio 9.0/Common7/IDE/'
+		"bit32": 'C:\\Program Files\\Microsoft Visual Studio 9.0\\Common7\\IDE\\',
+		"bit64": 'C:\\Program Files (x86)\\Microsoft Visual Studio 9.0\\Common7\\IDE\\'
 	},
 	vs2010: {
-		"bit32": 'C:/Program Files/Microsoft Visual Studio 10.0/Common7/IDE/',
-		"bit64": 'C:/Program Files (x86)/Microsoft Visual Studio 10.0/Common7/IDE/'
+		"bit32": 'C:\\Program Files\\Microsoft Visual Studio 10.0\\Common7\\IDE\\',
+		"bit64": 'C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Common7\\IDE\\'
 	},
 	vs2012: {
-		"bit32": 'C:/Program Files/Microsoft Visual Studio 11.0/Common7/IDE/',
-		"bit64": 'C:/Program Files (x86)/Microsoft Visual Studio 11.0/Common7/IDE/'
+		"bit32": 'C:\\Program Files\\Microsoft Visual Studio 11.0\\Common7\\IDE\\',
+		"bit64": 'C:\\Program Files (x86)\\Microsoft Visual Studio 11.0\\Common7\\IDE\\'
 	},
 	vs2013: {
-		"bit32": 'C:/Program Files/Microsoft Visual Studio 12.0/Common7/IDE/',
-		"bit64": 'C:/Program Files (x86)/Microsoft Visual Studio 12.0/Common7/IDE/'
+		"bit32": 'C:\\Program Files\\Microsoft Visual Studio 12.0\\Common7\\IDE\\',
+		"bit64": 'C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\Common7\\IDE\\'
 	}
 };
 
