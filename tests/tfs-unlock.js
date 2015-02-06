@@ -1,8 +1,8 @@
 'use strict';
 
 if (typeof require !== 'undefined') {
-	var tfs = require('./../tfs-unlock.js');
-	var expect = require('./../node_modules/expect.js/expect.js');
+	var expect = require('expect.js'),
+		tfs = require('./../tfs-unlock.js');
 }
 
 describe('Shell commands', function () {
@@ -30,7 +30,7 @@ describe('Shell commands', function () {
 	});
 	it('should succeed', function () {
 		return tfs.shell.exe('time /T').then(function (out) {
-			expect(out).to.be(tfs.messages.shell.exitCode + '0.')
+			expect(out).to.be(tfs.messages.shell.exitCode + '0.');
 		}, function (err) {
 			expect(err).to.be(null);
 		}, function (progress) {
@@ -47,7 +47,5 @@ describe('Shell commands', function () {
 				expect(progress.message).to.be(tfs.messages.shell.beginCommand);
 			}
 		});
-
-		expect(tfs.shell.exe('time /T', shellCallback)).to.be(tfs.messages.shell.beginCommand);
 	});
 });

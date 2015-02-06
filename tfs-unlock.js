@@ -8,12 +8,9 @@
 
 'use strict';
 
-var fs = require('fs'),
-	path = require('path'),
-	Q = require('Q'),
-	shellCallback,
-	wait = 3, // sec default delay for TFS to apply commands
-	workingDirectory,
+var _handlePaths,
+	findVisualStudioPath,
+	fs = require('fs'),
 	messages = {
 		"shell": {
 			"beginCommand": 'Begin shell command',
@@ -23,117 +20,127 @@ var fs = require('fs'),
 			"exitCode": 'Child process exited with code # '
 		}
 	},
-	shell = {
-		"exe": function (command, calleeCallback) {
-			var process,
-				deferred = Q.defer();
-
-			if (command) {
-				process = require('child_process').exec(command, {
-					"cwd": workingDirectory
-				});
-
-				process.stdout.on('data', function (message) {
-					deferred.notify({
-						stream: 'stdout',
-						message: messages.shell.stdout + message + '.'
-					});
-
-				});
-				process.stderr.on('data', function (message) {
-					deferred.notify({
-						stream: 'stderr',
-						message: messages.shell.stderr + message + '.'
-					});
-				});
-				process.on('close', function (code, signal) {
-					var out = '';
-					out += messages.shell.exitCode + (code || '') + '.';
-					if (signal != null) {
-						out += 'Child process terminated due to receipt of signal ' + signal + '.';
-					}
-					
-					deferred.resolve({exitCode: code, message: out});
-				});
-
-				deferred.notify({
-					message: messages.shell.beginCommand
-				});
-			} else {
-				deferred.reject(messages.shell.noCommand);
-			}
-
-			return deferred.promise;
-		}
-	},
-	tfs = function (paths, command) { // verfied meaning the path and file exisit
-		var commandLine,
-			exists,
-			log = '',
+	path = require('path'),
+	paths,
+	Q = require('Q'),
+	shellCallback,
+	shell,
+	tfs,
+	wait = 3, // sec default delay for TFS to apply commands
+	workingDirectory;
+shell = {
+	"exe": function (command, calleeCallback) {
+		var process,
 			deferred = Q.defer();
 
-		if (Object.prototype.toString.call(paths) !== '[object Array]') {
-			throw new TypeError("paths parameter must be an array");
-		}
+		if (command) {
+			process = require('child_process').exec(command, {
+				"cwd": workingDirectory
+			});
 
-		_handlePaths(paths, command).done(function (logs) {
-			if (shellCallback) {
-				shellCallback(logs);
-			}
-			
-			deferred.resolve(logs);
-		}, function (err) {
-			console.error('error', err);
-			deferred.reject(err);
-		});
-		
-		return deferred.promise;
-	},
-	_handlePaths = function (paths, command) {
-		return Q.all(paths.map(function (filepath) {
-			var deferred = Q.defer();
-			var log = '';
-			var filepath = fs.realpathSync(filepath); // resolve full path
-			var commandLine = "tf.exe " + command + " " + filepath;
-			var exists = fs.existsSync(filepath);
-
-			if (exists) {
-				shell.exe(commandLine).then(function (out) {
-					log += out.message;
-					
-					if (out.exitCode && out.exitCode !== 0) {
-						deferred.reject(out);
-					} else {					
-						deferred.resolve(log);
-					}
-				}, function (err) {
-					deferred.reject(err);
-				}, function (progress) {
-					log += progress.message;
+			process.stdout.on('data', function (message) {
+				deferred.notify({
+					stream: 'stdout',
+					message: messages.shell.stdout + message + '.'
 				});
 
-			} else {
-				throw new ReferenceError('File path is not found: ' + filepath);
-			}
+			});
+			process.stderr.on('data', function (message) {
+				deferred.notify({
+					stream: 'stderr',
+					message: messages.shell.stderr + message + '.'
+				});
+			});
+			process.on('close', function (code, signal) {
+				var out = '';
+				out += messages.shell.exitCode + (code || '') + '.';
+				if (signal != null) {
+					out += 'Child process terminated due to receipt of signal ' + signal + '.';
+				}
 
-			return deferred.promise;
-		}));
-	},
-	findVisualStudioPath = function () {
-		var wd;
-		for (var ver in paths) {
-			if (paths.hasOwnProperty(ver)) {
-				for (var dirPath in paths[ver]) {
-					if (paths[ver].hasOwnProperty(dirPath)) {
-						if (fs.existsSync(paths[ver][dirPath]) && fs.existsSync(path.join(paths[ver][dirPath], 'tf.exe'))) {
-							wd = paths[ver][dirPath];
-						}
+				deferred.resolve({exitCode: code, message: out});
+			});
+
+			deferred.notify({
+				message: messages.shell.beginCommand
+			});
+		} else {
+			deferred.reject(messages.shell.noCommand);
+		}
+
+		return deferred.promise;
+	}
+};
+tfs = function (paths, command) { // verfied meaning the path and file exisit
+	var commandLine,
+		exists,
+		log = '',
+		deferred = Q.defer();
+
+	if (Object.prototype.toString.call(paths) !== '[object Array]') {
+		throw new TypeError("paths parameter must be an array");
+	}
+
+	_handlePaths(paths, command).done(function (logs) {
+		if (shellCallback) {
+			shellCallback(logs);
+		}
+
+		deferred.resolve(logs);
+	}, function (err) {
+		console.error('error', err);
+		deferred.reject(err);
+	});
+
+	return deferred.promise;
+};
+_handlePaths = function (paths, command) {
+	return Q.all(paths.map(function (filepath) {
+		var commandLine,
+			deferred = Q.defer(),
+			exists,
+			log = '';
+		filepath = fs.realpathSync(filepath); // resolve full path
+		commandLine = "tf.exe " + command + " " + filepath;
+		exists = fs.existsSync(filepath);
+
+		if (exists) {
+			shell.exe(commandLine).then(function (out) {
+				log += out.message;
+
+				if (out.exitCode && out.exitCode !== 0) {
+					deferred.reject(out);
+				} else {
+					deferred.resolve(log);
+				}
+			}, function (err) {
+				deferred.reject(err);
+			}, function (progress) {
+				log += progress.message;
+			});
+
+		} else {
+			throw new ReferenceError('File path is not found: ' + filepath);
+		}
+
+		return deferred.promise;
+	}));
+};
+findVisualStudioPath = function () {
+	var wd;
+	for (var ver in paths) {
+		if (paths.hasOwnProperty(ver)) {
+			for (var dirPath in paths[ver]) {
+				if (paths[ver].hasOwnProperty(dirPath)) {
+					if (fs.existsSync(paths[ver][dirPath]) && fs.existsSync(path.join(paths[ver][dirPath], 'tf.exe'))) {
+						wd = paths[ver][dirPath];
 					}
 				}
 			}
 		}
-		return wd;
-	};
+	}
+	return wd;
+};
 
 exports.init = function (param) {
 	param = param || {
@@ -158,7 +165,7 @@ exports.undo = function (paths) {
 };
 
 // Enumeration for visualStudioPath
-var paths = {
+paths = {
 	vs2008: {
 		"bit32": 'C:\\Program Files\\Microsoft Visual Studio 9.0\\Common7\\IDE\\',
 		"bit64": 'C:\\Program Files (x86)\\Microsoft Visual Studio 9.0\\Common7\\IDE\\'
