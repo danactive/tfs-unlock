@@ -91,7 +91,6 @@ tfs = function (paths, command) { // verfied meaning the path and file exisit
 
 		deferred.resolve(logs);
 	}, function (err) {
-		console.error('error', err);
 		deferred.reject(err);
 	}, function (progress) {
 		deferred.notify(progress);
