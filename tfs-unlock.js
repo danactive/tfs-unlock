@@ -53,12 +53,15 @@ shell = {
 			});
 			process.on('close', function (code, signal) {
 				var out = '';
-				out += messages.shell.exitCode + (code || '') + '.';
+				out += messages.shell.exitCode + (code || '0') + '.';
 				if (signal != null) {
 					out += 'Child process terminated due to receipt of signal ' + signal + '.';
 				}
 
-				deferred.resolve({exitCode: code, message: out});
+				deferred.resolve({
+					exitCode: code,
+					message: out
+				});
 			});
 
 			deferred.notify({
