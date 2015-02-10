@@ -93,7 +93,9 @@ tfs = function (paths, command) { // verfied meaning the path and file exisit
 	}, function (err) {
 		console.error('error', err);
 		deferred.reject(err);
-	});
+	}, function (progress) {
+		deferred.notify(progress);
+	})
 
 	return deferred.promise;
 };
@@ -119,7 +121,10 @@ _handlePaths = function (paths, command) {
 			}, function (err) {
 				deferred.reject(err);
 			}, function (progress) {
-				log += progress.message;
+				if (log && progress && progress.message) {
+					log += progress.message;
+				}
+				deferred.notify(progress);
 			});
 
 		} else {
