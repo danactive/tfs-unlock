@@ -1,6 +1,11 @@
 # tfs-unlock
 	npm install tfs-unlock --save-dev
 
+[![npm version](https://badge.fury.io/js/tfs-unlock.svg)](http://badge.fury.io/js/tfs-unlock)
+[![Dependencies Status](https://david-dm.org/danactive/tfs-unlock.svg)](https://david-dm.org/danactive/tfs-unlock)
+[![DevDependencies Status](https://david-dm.org/danactive/tfs-unlock/dev-status.svg)](https://david-dm.org/danactive/tfs-unlock#info=devDependencies)
+[![MIT Licensed](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](http://opensource.org/licenses/MIT)
+
 ## Usage
 
 	var tfs = require('tfs-unlock');
@@ -14,6 +19,8 @@
 	tfs.undo(arrayOfPaths);
 
 ## Changelog
+* 0.3.1 2015-Feb-16
+	* Unit tests pass
 * 0.3.0 2015-Feb-02
 	* Rewrote without sleep dependencies by using promises
 * 0.2.0 2015-Jan-24
