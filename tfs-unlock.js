@@ -53,12 +53,15 @@ shell = {
 			});
 			process.on('close', function (code, signal) {
 				var out = '';
-				out += messages.shell.exitCode + (code || '') + '.';
+				out += messages.shell.exitCode + (code || '0') + '.';
 				if (signal != null) {
 					out += 'Child process terminated due to receipt of signal ' + signal + '.';
 				}
 
-				deferred.resolve({exitCode: code, message: out});
+				deferred.resolve({
+					exitCode: code,
+					message: out
+				});
 			});
 
 			deferred.notify({
@@ -88,9 +91,10 @@ tfs = function (paths, command) { // verfied meaning the path and file exisit
 
 		deferred.resolve(logs);
 	}, function (err) {
-		console.error('error', err);
 		deferred.reject(err);
-	});
+	}, function (progress) {
+		deferred.notify(progress);
+	})
 
 	return deferred.promise;
 };
@@ -116,7 +120,10 @@ _handlePaths = function (paths, command) {
 			}, function (err) {
 				deferred.reject(err);
 			}, function (progress) {
-				log += progress.message;
+				if (log && progress && progress.message) {
+					log += progress.message;
+				}
+				deferred.notify(progress);
 			});
 
 		} else {

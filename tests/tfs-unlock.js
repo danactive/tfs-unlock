@@ -15,8 +15,8 @@ describe('Shell commands', function () {
 		});
 	});
 	it('should fail', function () {
-		return tfs.shell.exe('bad_command').then(function (message) {
-			expect(message).to.be(tfs.messages.shell.exitCode + '1.');
+		return tfs.shell.exe('bad_command').then(function (status) {
+			expect(status.message).to.be(tfs.messages.shell.exitCode + '1.');
 		}, function (err) {
 			expect(err).to.be(null);
 		}, function (progress) {
@@ -29,8 +29,8 @@ describe('Shell commands', function () {
 		});
 	});
 	it('should succeed', function () {
-		return tfs.shell.exe('time /T').then(function (out) {
-			expect(out).to.be(tfs.messages.shell.exitCode + '0.');
+		return tfs.shell.exe('time /T').then(function (status) {
+			expect(status.message).to.be(tfs.messages.shell.exitCode + '0.');
 		}, function (err) {
 			expect(err).to.be(null);
 		}, function (progress) {
