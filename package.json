@@ -8,13 +8,14 @@
   },
   "author": "Dan BROOKS",
   "contributors": [
-    "Michael Gardner"
+    "Michael Gardner",
+    "@madsmadsdk"
   ],
   "license": "BSD",
   "readmeFilename": "README.md",
   "main": "tfs-unlock.js",
   "dependencies": {
-    "q": "1.1.x"
+    "q": "1.2.x"
   },
   "devDependencies": {
     "expect.js": "0.3.x",
