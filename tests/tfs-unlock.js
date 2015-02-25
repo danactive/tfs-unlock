@@ -41,7 +41,11 @@ describe('Shell commands', function () {
 			time = (hours <= 9) ? '0' + time : time;
 
 			if (progress.stream === 'stdout') {
-				expect(progress.message).to.be(tfs.messages.shell.stdout + time + "\r\n.");
+				if(progress.message.indexOf('AM') > 0 || progress.message.indexOf('PM') > 0) {
+					expect(progress.message).to.be(tfs.messages.shell.stdout + time + "\r\n.");
+				} else {
+					expect(progress.message).to.be(tfs.messages.shell.stdout + time.replace(' PM','').replace(' AM','') + "\r\n.");
+				}
 			}
 			if (!progress.stream) {
 				expect(progress.message).to.be(tfs.messages.shell.beginCommand);
