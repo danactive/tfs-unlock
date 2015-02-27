@@ -19,6 +19,8 @@
 	tfs.undo(arrayOfPaths);
 
 ## Changelog
+* 0.3.2 2015-Feb-26
+	* Update q dependency
 * 0.3.1 2015-Feb-16
 	* Unit tests pass
 * 0.3.0 2015-Feb-02
