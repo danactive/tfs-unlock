@@ -105,7 +105,7 @@ _handlePaths = function (paths, command) {
 			exists,
 			log = '';
 		filepath = fs.realpathSync(filepath); // resolve full path
-		commandLine = "tf.exe " + command + " " + filepath;
+		commandLine = "tf.exe " + command + " \"" + filepath + "\"";
 		exists = fs.existsSync(filepath);
 
 		if (exists) {
