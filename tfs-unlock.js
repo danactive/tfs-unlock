@@ -188,6 +188,10 @@ paths = {
 	vs2013: {
 		"bit32": 'C:\\Program Files\\Microsoft Visual Studio 12.0\\Common7\\IDE\\',
 		"bit64": 'C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\Common7\\IDE\\'
+	},
+	vs2015: {
+		"bit32": 'C:\\Program Files\\Microsoft Visual Studio 14.0\\Common7\\IDE\\',
+		"bit64": 'C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\Common7\\IDE\\'
 	}
 };
 
@@ -195,6 +199,7 @@ exports.vs2008 = paths.vs2008;
 exports.vs2010 = paths.vs2010;
 exports.vs2012 = paths.vs2012;
 exports.vs2013 = paths.vs2013;
+exports.vs2015 = paths.vs2015;
 
 // for test suite
 exports.shell = shell;
