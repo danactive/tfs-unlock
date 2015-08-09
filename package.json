@@ -15,15 +15,15 @@
   "readmeFilename": "README.md",
   "main": "tfs-unlock.js",
   "dependencies": {
-    "q": "1.2.x"
+    "q": "^2.0.3"
   },
   "devDependencies": {
-    "expect.js": "0.3.x",
-    "grunt-contrib-jshint": "0.11.x",
-    "mocha": "2.1.x"
+    "expect.js": "^0.3.1",
+    "grunt-contrib-jshint": "^0.11.2",
+    "mocha": "^2.2.5"
   },
   "peerDependencies": {
-    "grunt": "0.4.x"
+    "grunt": "^0.4.5"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha tests"
