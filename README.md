@@ -19,6 +19,9 @@
 	tfs.undo(arrayOfPaths);
 
 ## Changelog
+* 0.3.4 2015-Aug-09
+	* Add path for VSS 2015 (v14)
+	* Update q (v2) dependency and other minor bumps
 * 0.3.3 2015-Mar-19
 	* Allow white space in file path
 * 0.3.2 2015-Feb-26
