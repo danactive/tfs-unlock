@@ -19,6 +19,8 @@
 	tfs.undo(arrayOfPaths);
 
 ## Changelog
+* 0.3.5 2015-Aug-17
+	* Restore q (v1) dependency due to missing notify method
 * 0.3.4 2015-Aug-09
 	* Add path for VSS 2015 (v14)
 	* Update q (v2) dependency and other minor bumps
