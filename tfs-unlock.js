@@ -135,18 +135,33 @@ _handlePaths = function (paths, command) {
 };
 findVisualStudioPath = function () {
 	var wd;
-	for (var ver in paths) {
-		if (paths.hasOwnProperty(ver)) {
-			for (var dirPath in paths[ver]) {
-				if (paths[ver].hasOwnProperty(dirPath)) {
-					if (fs.existsSync(paths[ver][dirPath]) && fs.existsSync(path.join(paths[ver][dirPath], 'tf.exe'))) {
-						wd = paths[ver][dirPath];
+	
+	var testEnvVar = function(envVarPath) {
+		var tfPath = path.join(envVarPath, '../IDE/tf.exe');
+		
+		return fs.existsSync(tfPath);
+	};
+	
+	if (process.env.VS140COMNTOOLS && testEnvVar(process.env.VS140COMNTOOLS)) {
+		return path.join(process.env.VS140COMNTOOLS, '../IDE');
+	} else if (process.env.VS120COMNTOOLS && testEnvVar(process.env.VS120COMNTOOLS)) {
+		return path.join(process.env.VS120COMNTOOLS, '../IDE');
+	} else if (process.env.VS110COMNTOOLS && testEnvVar(process.env.VS110COMNTOOLS)) {
+		return path.join(process.env.VS110COMNTOOLS, '../IDE');
+	} else{
+		for (var ver in paths) {
+			if (paths.hasOwnProperty(ver)) {
+				for (var dirPath in paths[ver]) {
+					if (paths[ver].hasOwnProperty(dirPath)) {
+						if (fs.existsSync(paths[ver][dirPath]) && fs.existsSync(path.join(paths[ver][dirPath], 'tf.exe'))) {
+							wd = paths[ver][dirPath];
+						}
 					}
 				}
 			}
 		}
+		return wd;
 	}
-	return wd;
 };
 
 exports.init = function (param) {
