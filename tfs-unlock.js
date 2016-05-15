@@ -94,7 +94,7 @@ tfs = function (paths, command) { // verfied meaning the path and file exisit
 		deferred.reject(err);
 	}, function (progress) {
 		deferred.notify(progress);
-	})
+	});
 
 	return deferred.promise;
 };
@@ -135,13 +135,13 @@ _handlePaths = function (paths, command) {
 };
 findVisualStudioPath = function () {
 	var wd;
-	
+
 	var testEnvVar = function(envVarPath) {
 		var tfPath = path.join(envVarPath, '../IDE/tf.exe');
-		
+
 		return fs.existsSync(tfPath);
 	};
-	
+
 	if (process.env.VS140COMNTOOLS && testEnvVar(process.env.VS140COMNTOOLS)) {
 		return path.join(process.env.VS140COMNTOOLS, '../IDE');
 	} else if (process.env.VS120COMNTOOLS && testEnvVar(process.env.VS120COMNTOOLS)) {
