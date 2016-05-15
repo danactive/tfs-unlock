@@ -1,6 +1,6 @@
 {
   "name": "tfs-unlock",
-  "version": "0.3.5",
+  "version": "0.4.0",
   "description": "Windows Team Foundation Server (TFS) checkout files via Node.js",
   "repository": {
     "type": "git",

@@ -19,6 +19,8 @@
 	tfs.undo(arrayOfPaths);
 
 ## Changelog
+* 0.4.0 2016-Mar-15
+	* Environment variables - Uses the visual studio environment variables, VS140COMNTOOLS, VS120COMNTOOLS,and VS110COMNTOOLS which are added to the system to find tf.exe before rolling back to the hardcoded paths.
 * 0.3.5 2015-Aug-17
 	* Restore q (v1) dependency due to missing notify method
 * 0.3.4 2015-Aug-09
