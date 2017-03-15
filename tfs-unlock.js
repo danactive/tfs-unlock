@@ -219,7 +219,7 @@ exports.vs2010 = paths.vs2010;
 exports.vs2012 = paths.vs2012;
 exports.vs2013 = paths.vs2013;
 exports.vs2015 = paths.vs2015;
-exports.vs2017 = paths.vs2017
+exports.vs2017 = paths.vs2017;
 
 // for test suite
 exports.shell = shell;
