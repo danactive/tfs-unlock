@@ -19,6 +19,9 @@
 	tfs.undo(arrayOfPaths);
 
 ## Changelog
+* 0.6.0 2017-Mar-16
+	* Add path for VS 2017 (v15)
+	* Update dev dependencies
 * 0.5.0 2016-Mar-15
 	* Update dev dependencies
 	* Lint passes
@@ -27,7 +30,7 @@
 * 0.3.5 2015-Aug-17
 	* Restore q (v1) dependency due to missing notify method
 * 0.3.4 2015-Aug-09
-	* Add path for VSS 2015 (v14)
+	* Add path for VS 2015 (v14)
 	* Update q (v2) dependency and other minor bumps
 * 0.3.3 2015-Mar-19
 	* Allow white space in file path
@@ -38,7 +41,7 @@
 * 0.3.0 2015-Feb-02
 	* Rewrote without sleep dependencies by using promises
 * 0.2.0 2015-Jan-24
-	* Add path for VSS 2013 (v12)
+	* Add path for VS 2013 (v12)
 
 ## Roadmap
 * Update unit tests that are currently failing
