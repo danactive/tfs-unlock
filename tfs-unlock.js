@@ -1,4 +1,4 @@
-/*
+﻿/*
  * tfs-unlock
  * https://github.com/danactive/tfs-unlock
  *
@@ -207,6 +207,10 @@ paths = {
 	vs2015: {
 		"bit32": 'C:\\Program Files\\Microsoft Visual Studio 14.0\\Common7\\IDE\\',
 		"bit64": 'C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\Common7\\IDE\\'
+    },
+    vs2017: {
+        "bit32": 'C:\\Program Files\\Microsoft Visual Studio\\2017\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer\\',
+        "bit64": 'C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer\\'
 	}
 };
 
@@ -215,6 +219,7 @@ exports.vs2010 = paths.vs2010;
 exports.vs2012 = paths.vs2012;
 exports.vs2013 = paths.vs2013;
 exports.vs2015 = paths.vs2015;
+exports.vs2017 = paths.vs2017;
 
 // for test suite
 exports.shell = shell;
