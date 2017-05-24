@@ -104,7 +104,7 @@ _handlePaths = function (paths, command) {
 			deferred = Q.defer(),
 			exists,
 			log = '';
-		filepath = fs.realpathSync(filepath); // resolve full path
+		filepath = path.resolve(filepath); // resolve full path
 		commandLine = "tf.exe " + command + " \"" + filepath + "\"";
 		exists = fs.existsSync(filepath);
 
