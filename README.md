@@ -19,6 +19,8 @@
 	tfs.undo(arrayOfPaths);
 
 ## Changelog
+* 0.6.1 2017-May-26
+	* Resolve path with symlink support
 * 0.6.0 2017-Mar-16
 	* Add path for VS 2017 (v15)
 	* Update dev dependencies
