@@ -15,7 +15,7 @@
   "readmeFilename": "README.md",
   "main": "tfs-unlock.js",
   "dependencies": {
-    "q": "^1.4.1"
+    "q": "^1.5.1"
   },
   "devDependencies": {
     "expect.js": "^0.3.1",
