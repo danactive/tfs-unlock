@@ -211,6 +211,14 @@ paths = {
     vs2017: {
         "bit32": 'C:\\Program Files\\Microsoft Visual Studio\\2017\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer\\',
         "bit64": 'C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Professional\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer\\'
+	},
+    vs2017Community: {
+        "bit32": 'C:\\Program Files\\Microsoft Visual Studio\\2017\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer\\',
+        "bit64": 'C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer\\'
+	},
+    vs2017Enterprise: {
+        "bit32": 'C:\\Program Files\\Microsoft Visual Studio\\2017\\Enterprise\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer\\',
+        "bit64": 'C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer\\'
 	}
 };
 
@@ -220,6 +228,9 @@ exports.vs2012 = paths.vs2012;
 exports.vs2013 = paths.vs2013;
 exports.vs2015 = paths.vs2015;
 exports.vs2017 = paths.vs2017;
+exports.vs2017Professional = paths.vs2017;
+exports.vs2017Community = paths.vs2017Community;
+exports.vs2017Enterprise = paths.vs2017Enterprise;
 
 // for test suite
 exports.shell = shell;
